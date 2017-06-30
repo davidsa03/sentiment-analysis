@@ -1,0 +1,36 @@
+<div class="container">
+  <h1 class="text-center">Sentiment</h1>
+  <textarea id="content" class="form-control" rows="10"></textarea>
+  <center>
+    <button id="sentimentIt" type="button" class="btn btn-primary btn-lg" style="margin-top: 10px;">Analyze</button>
+  </center>
+  <h3 id="analysis-result"></h3>
+</div>
+
+<script src="/js/dependencies/sails.io.js"></script>
+<script>
+$("#sentimentIt").click(function() {
+  var content = document.getElementById('content').value;
+  var postObj = {
+    content: content,
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: '/',
+    data: postObj,
+  });
+});
+io.socket.on('analysis', function(result) {
+  var posneg;
+  var score = Number(result.score);
+  if (score > 0) {
+    posneg = "Positive";
+  } else if (score < 0) {
+    posneg = "Negative";
+  } else {
+    posneg = "Neutral";
+  }
+  document.getElementById('analysis-result').innerHTML = posneg;
+});
+</script>
